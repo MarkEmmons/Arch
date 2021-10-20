@@ -125,10 +125,12 @@ partition(){
 	swapon /dev/sda2
 
 	## Use mapper because we want to format the opened partition
-	mkfs.btrfs /dev/mapper/cryptroot
+	#mkfs.btrfs /dev/mapper/cryptroot
+	mkfs.btrfs /dev/sda3
 
 	# Create subvolumes
-	mount /dev/mapper/cryptroot /mnt
+	#mount /dev/mapper/cryptroot /mnt
+	mount /dev/sda3 /mnt
 	cd /mnt
 	btrfs subvolume create @
 	btrfs subvolume create @home
@@ -136,9 +138,11 @@ partition(){
 	umount /mnt
 
 	# Mount the filesystems
-	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/mapper/cryptroot /mnt
+	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/mapper/cryptroot /mnt
+	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/sda3 /mnt
 	mkdir /mnt/home
-	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/mapper/cryptroot /mnt/home
+	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/mapper/cryptroot /mnt/home
+	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/sda3 /mnt/home
 	mkdir /mnt/boot
 	mount /dev/sda1 /mnt/boot
 
