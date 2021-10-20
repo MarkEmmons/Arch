@@ -169,23 +169,22 @@ update_mirrors(){
 # Refresh mirrors and install the base system
 install_base(){
 
-	STAT_ARRAY=( "base"
-	"linux"
-	"linux-firmware"
-	"efibootmgr"
-	"grub-bios"
-	"grub-btrfs"
-	"btrfs-progs"
+	STAT_ARRAY=( "linux"
+	#"linux-firmware"
+	#"efibootmgr"
+	#"grub-bios"
+	#"grub-btrfs"
+	#"btrfs-progs"
 	"sudo"
-	"vim"
-	"installing base"
-	"installing linux"
-	"installing linux-firmware"
-	"installing efibootmgr"
-	"installing grub-bios"
-	"installing grub-btrfs"
-	"installing btrfs-progs"
-	"installing sudo"
+	#"vim"
+	#"installing base"
+	#"installing linux"
+	#"installing linux-firmware"
+	#"installing efibootmgr"
+	#"installing grub-bios"
+	#"installing grub-btrfs"
+	#"installing btrfs-progs"
+	#"installing sudo"
 	"installing vim" )
 
 	# Initialize progress bar
