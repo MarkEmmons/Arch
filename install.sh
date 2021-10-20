@@ -13,11 +13,11 @@ prepare(){
 	# Fetch some extra stuff
 	curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
 	source defs.sh
-	source progress_bar.sh
 
 	curl -LJO "$SRC$CHROOT" > /dev/null 3>&2 2>&1
 	curl -LJO "$SRC$PBAR" > /dev/null 3>&2 2>&1
 	#curl -LJO "$SRC$ARCHEY" > /dev/null 3>&2 2>&1
+	source progress_bar.sh
 
 	# Dissalow screen blanking for installation
 	setterm -blank 0
