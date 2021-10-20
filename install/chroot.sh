@@ -261,6 +261,10 @@ configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
 #install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
 #build > /var/log/install/chroot/build.log 3>&2 2>&1
 
+# vbox
+pacman --needed --noconfirm --noprogressbar -S dhcpcd
+systemctl enable dhcpcd.service
+
 #RUN_TIME=$(get_runtime)
 #export RUN_TIME
 #export USER
