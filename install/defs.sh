@@ -49,8 +49,8 @@ cache_packages(){
 	"Successfully cached packages" )
 
 	# Initialize progress bar
-    progress_bar " Backing up pkg-cache" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-    BAR_ID=$!
+	progress_bar " Backing up pkg-cache" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
 	# Mount the filesystems
 	echo "Mounting former file system"

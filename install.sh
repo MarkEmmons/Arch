@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null
-#source defs.sh
-
 # Clean disk and enable encryption
 prepare(){
 
@@ -14,39 +11,37 @@ prepare(){
 	echo
 
 	# Fetch some extra stuff
-	#curl -LJO "$SRC$CHROOT" > /dev/null
-	curl -LJO "https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh" > /dev/null
-	#curl -LJO "$SRC$PBAR" > /dev/null
-	#curl -LJO "$SRC$ARCHEY" > /dev/null
+	curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
+	source defs.sh
+	source progress_bar.sh
+
+	curl -LJO "$SRC$CHROOT" > /dev/null 3>&2 2>&1
+	curl -LJO "$SRC$PBAR" > /dev/null 3>&2 2>&1
+	#curl -LJO "$SRC$ARCHEY" > /dev/null 3>&2 2>&1
 
 	# Dissalow screen blanking for installation
 	setterm -blank 0
 
 	# Set time for time-keeping
-	#rm /etc/localtime
-	#ln -s /usr/share/zoneinfo/US/Central /etc/localtime
-	#hwclock --systohc --utc
+	rm /etc/localtime
+	ln -s /usr/share/zoneinfo/US/Central /etc/localtime
+	hwclock --systohc --utc
 
 	#uinfo_dialog
 
 	# Echo start time
-	#date > time.log
+	date > time.log
 }
 
 begin(){
 
-	#STAT_ARRAY=( "Enabling encryption"
-	#"Zapping former partitions"
-	#"Creating new partitions"
-	#"Done" )
+	STAT_ARRAY=( "Zapping former partitions"
+	"Creating new partitions"
+	"Done" )
 
 	# Initialize progress bar
-	#progress_bar " Getting started" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	#BAR_ID=$!
-
-	# Enable encryption module
-	echo "Enabling encryption"
-	#modprobe -a dm-mod dm_crypt
+	progress_bar " Getting started" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
 	# Zap any former entry
 	echo "Zapping former partitions"
@@ -74,7 +69,7 @@ Y
 "
 
 	echo "Done"
-	#wait $BAR_ID
+	wait $BAR_ID
 }
 
 # Encrypt the lvm partition then un-encrypt for partitioning
@@ -88,6 +83,10 @@ encrypt(){
 	# Initialize progress bar
 	#progress_bar " Encrypting disk" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	#BAR_ID=$!
+
+	# Enable encryption module
+	echo "Enabling encryption"
+	#modprobe -a dm-mod dm_crypt
 
 	echo "Encrypting disk..."
 	echo -n "$CRYPT" | \
@@ -106,29 +105,30 @@ encrypt(){
 # Partition
 partition(){
 
-	#STAT_ARRAY=( "Physical volume \"/dev/mapper/lvm\" successfully created."
-	#"Logical volume \"homevol\" created."
-	#"/dev/mapper/ArchLinux-rootvol"
-	#"/dev/mapper/ArchLinux-homevol"
-	#"/dev/mapper/ArchLinux-pool"
-	#"Creating filesystem with"
-	#"Allocating group tables:"
-	#"Setting up swapspace version" )
+	STAT_ARRAY=( "Formatting boot partition"
+	"Formatting swap partition"
+	"Formatting root partition"
+	"Creating subvolumes"
+	"Mounting filesystem" )
 
 	# Initialize progress bar
-	#progress_bar " Partitioning" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	#BAR_ID=$!
+	progress_bar " Partitioning" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
 	# Format the filesystems on each logical volume
+	echo "Formatting boot partition..."
 	mkfs.fat -F32 /dev/sda1
+	echo "Formatting swap partition..."
 	mkswap /dev/sda2
 	swapon /dev/sda2
 
 	## Use mapper because we want to format the opened partition
+	echo "Formatting root partition..."
 	#mkfs.btrfs /dev/mapper/cryptroot
 	mkfs.btrfs -f /dev/sda3
 
 	# Create subvolumes
+	echo "Creating subvolumes..."
 	#mount /dev/mapper/cryptroot /mnt
 	mount /dev/sda3 /mnt
 	cd /mnt
@@ -138,6 +138,7 @@ partition(){
 	umount /mnt
 
 	# Mount the filesystems
+	echo "Mounting filesystem..."
 	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/mapper/cryptroot /mnt
 	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/sda3 /mnt
 	mkdir /mnt/home
@@ -146,77 +147,64 @@ partition(){
 	mkdir /mnt/boot
 	mount /dev/sda1 /mnt/boot
 
-	#wait $BAR_ID
+	wait $BAR_ID
 }
 
 # Update mirror list for faster install times
 update_mirrors(){
 
-	#STAT_ARRAY=( "Ranking mirrors..."
-	#"Got armrr"
-	#"Running armrr..."
-	#"Got new mirror list" )
+	STAT_ARRAY=( "Ranking mirrors"
+	"Got new mirror list" )
 
 	# Initialize progress bar
-	#progress_bar " Updating mirror list" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	#BAR_ID=$!
+	progress_bar " Updating mirror list" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
+	echo "Ranking mirrors..."
 	reflector --latest 15 --sort rate --save /etc/pacman.d/mirrorlist
-	echo "Got new mirror list"
-	#wait $BAR_ID
+	echo "Got new mirror list!"
+	wait $BAR_ID
 }
 
 # Refresh mirrors and install the base system
 install_base(){
 
-	#STAT_ARRAY=( "Creating install root at"
-	#"linux-api-headers"
-	#"pambase"
-	#"dhcpcd"
-	#"man-pages"
-	#"git"
-	#"python2"
-	#"http-parser"
-	#"sudo"
-	#"xterm"
-	#"nodejs"
-	#"feh"
-	#"members in group base"
-	#"installing linux-api-headers"
-	#"installing dhcpcd"
-	#"installing man-pages"
-	#"installing pacman"
-	#"installing autoconf"
-	#"installing automake"
-	#"installing binutils"
-	#"installing bison"
-	#"installing fakeroot"
-	#"installing gcc"
-	#"installing guile"
-	#"installing make"
-	#"installing patch"
-	#"may fail on some machines"
-	#"Updating system user accounts"
-	#"Rebuilding certificate stores" )
+	STAT_ARRAY=( "base"
+	"linux"
+	"linux-firmware"
+	"efibootmgr"
+	"grub-bios"
+	"grub-btrfs"
+	"btrfs-progs"
+	"sudo"
+	"vim"
+	"installing base"
+	"installing linux"
+	"installing linux-firmware"
+	"installing efibootmgr"
+	"installing grub-bios"
+	"installing grub-btrfs"
+	"installing btrfs-progs"
+	"installing sudo"
+	"installing vim" )
 
-	## Initialize progress bar
-	#progress_bar " Installing base system" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	#BAR_ID=$!
+	# Initialize progress bar
+	progress_bar " Installing base system" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
-	#pacman -Syy
 	pacstrap /mnt base linux linux-firmware efibootmgr grub-bios grub-btrfs btrfs-progs sudo vim
 
 	## Copy over relevant files
-	#mkdir /mnt/var/log/install
-	#mv *.log /mnt/var/log/install
+	mkdir -p /mnt/var/log/install
+	mv *.log /mnt/var/log/install
 	#mv archey /mnt/archey
-	#cp progress_bar.sh /mnt/progress_bar.sh
-	#cp /etc/zsh/zshrc /mnt/root/.zshrc
+	cp progress_bar.sh /mnt/progress_bar.sh
+	cp /etc/zsh/zshrc /mnt/root/.zshrc
 
 	# Generate an fstab
 	genfstab -U /mnt >> /mnt/etc/fstab
 
-	#wait $BAR_ID
+	wait $BAR_ID
 }
 
 # Create fstab and chroot into the new system
@@ -230,13 +218,10 @@ finish(){
 	swapoff /dev/sda2
 	read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n' < /dev/tty
 	tput cnorm
-	reboot
+	#reboot
 }
 
 prepare
-
-# See if we can put this in prepare
-#source progress_bar.sh
 
 tput setaf 7 && tput bold && echo "Installing Arch Linux" && tput sgr0
 echo ""
