@@ -1,7 +1,7 @@
 #!/bin/bash
 
-wget https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh
-source defs.sh
+#wget https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh
+#source defs.sh
 
 # Clean disk and enable encryption
 prepare(){
@@ -15,6 +15,7 @@ prepare(){
 
 	# Fetch some extra stuff
 	#wget "$SRC$CHROOT"
+	wget "https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh"
 	#wget "$SRC$PBAR"
 	#wget "$SRC$ARCHEY"
 
@@ -22,14 +23,14 @@ prepare(){
 	setterm -blank 0
 
 	# Set time for time-keeping
-	rm /etc/localtime
-	ln -s /usr/share/zoneinfo/US/Central /etc/localtime
-	hwclock --systohc --utc
+	#rm /etc/localtime
+	#ln -s /usr/share/zoneinfo/US/Central /etc/localtime
+	#hwclock --systohc --utc
 
-	uinfo_dialog
+	#uinfo_dialog
 
 	# Echo start time
-	date > time.log
+	#date > time.log
 }
 
 begin(){
@@ -237,17 +238,17 @@ tput setaf 7 && tput bold && echo "Installing Arch Linux" && tput sgr0
 echo ""
 tput setaf 7 && tput bold && echo ":: Running installation scripts..." && tput sgr0
 
-cache_packages >cache_packages.log 3>&2 2>&1
+#cache_packages >cache_packages.log 3>&2 2>&1
 
 sed "s|CACHE_VAL_TO_BE|\"$CACHE\"|" -i chroot.sh
 
 begin >begin.log 3>&2 2>&1
-encrypt >encrypt.log 3>&2 2>&1
+#encrypt >encrypt.log 3>&2 2>&1
 partition >partition.log 3>&2 2>&1
 update_mirrors >update_mirrors.log 3>&2 2>&1
 install_base >install_base.log 3>&2 2>&1
 
 tput setaf 7 && tput bold && echo ":: Chrooting into new system..." && tput sgr0
 
-#chroot_mnt
-#finish
+chroot_mnt
+finish

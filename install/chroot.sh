@@ -1,14 +1,11 @@
 #!/bin/bash
 
-#pacman --noconfirm -S $VM_PACKAGES
-#pacman -Sp --noconfirm $VM_PACKAGES | parallel wget -q -P /var/cache/pacman/pkg {}
+#HOST=HOST_NAME_TO_BE
+#ROOT=ROOT_PASS_TO_BE
+#USER=USER_NAME_TO_BE
+#PASS=USER_PASS_TO_BE
 
-HOST=HOST_NAME_TO_BE
-ROOT=ROOT_PASS_TO_BE
-USER=USER_NAME_TO_BE
-PASS=USER_PASS_TO_BE
-
-CACHE=CACHE_VAL_TO_BE
+#CACHE=CACHE_VAL_TO_BE
 
 # Normal chroot stuff
 install_linux(){
@@ -46,7 +43,7 @@ install_linux(){
 	# Install Linux
 	sed '/^MODULES=/s|()|(btrfs)|' -i /etc/mkinitcpio.conf
 	#echo "FONT=vector-16" > /etc/vconsole.conf || consolefont
-	sed '/^HOOKS=/s|filesystems|encrypt filesystems|' -i /etc/mkinitcpio.conf
+	#sed '/^HOOKS=/s|filesystems|encrypt filesystems|' -i /etc/mkinitcpio.conf
 	echo -e "\nRunning mkinitcpio"
 	mkinitcpio -p linux
 
@@ -55,8 +52,8 @@ install_linux(){
 	echo -e "\nRunning grub-install"
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 	echo -e "\nRunning grub-mkconfig"
-	CR_UUID=$(blkid | grep cryptroot | awk '{ print $2 }' | sed 's|"||g')
-	sed "/^GRUB_CMDLINE_LINUX_DEFAULT=/s|quiet|quiet cryptdevice=${CR_UUID}:cryptroot root=/dev/mapper/cryptroot|" -i /etc/default/grub
+	#CR_UUID=$(blkid | grep cryptroot | awk '{ print $2 }' | sed 's|"||g')
+	#sed "/^GRUB_CMDLINE_LINUX_DEFAULT=/s|quiet|quiet cryptdevice=${CR_UUID}:cryptroot root=/dev/mapper/cryptroot|" -i /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg
 
 	#wait $BAR_ID
@@ -65,38 +62,38 @@ install_linux(){
 # Create user and add some passwords
 configure_users(){
 
-	STAT_ARRAY=( "Setting root password"
-	"Root password set"
-	"Changing shell for root"
-	"Shell changed"
-	"Adding new user"
-	"Setting user password"
-	"Adding user to sudoers"
-	"New user created" )
+	#STAT_ARRAY=( "Setting root password"
+	#"Root password set"
+	#"Changing shell for root"
+	#"Shell changed"
+	#"Adding new user"
+	#"Setting user password"
+	#"Adding user to sudoers"
+	#"New user created" )
 
-	# Initialize progress bar
-	progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	BAR_ID=$!
+	## Initialize progress bar
+	#progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	#BAR_ID=$!
 
 	# Choose password for root and change default shell to zsh
 	echo "Setting root password..."
-	echo "root:$ROOT" | chpasswd
+	echo "root:root" | chpasswd
 	unset $ROOT
 	echo "Root password set."
 	chsh -s /bin/zsh
 
 	# Give new user root-privileges
-	echo "Adding new user..."
-	useradd -m -G wheel -s /bin/zsh $USER
-	cp /root/.zshrc /home/$USER/.zshrc
-	echo "Setting user password..."
-	echo "$USER:$PASS" | chpasswd
-	unset $PASS
-	echo "Adding user to sudoers..."
-	sed "s/^root ALL=(ALL) ALL/root ALL=(ALL) ALL\n$USER ALL=(ALL) ALL/" -i /etc/sudoers
-	echo "New user created."
+	#echo "Adding new user..."
+	#useradd -m -G wheel -s /bin/zsh $USER
+	#cp /root/.zshrc /home/$USER/.zshrc
+	#echo "Setting user password..."
+	#echo "$USER:$PASS" | chpasswd
+	#unset $PASS
+	#echo "Adding user to sudoers..."
+	#sed "s/^root ALL=(ALL) ALL/root ALL=(ALL) ALL\n$USER ALL=(ALL) ALL/" -i /etc/sudoers
+	#echo "New user created."
 
-	wait $BAR_ID
+	#wait $BAR_ID
 }
 
 # Install X Window System
@@ -249,7 +246,7 @@ get_runtime(){
 
 # Main
 mkdir /var/log/install/chroot
-source progress_bar.sh
+#source progress_bar.sh
 
 install_linux > /var/log/install/chroot/install_linux.log 3>&2 2>&1
 
@@ -261,17 +258,17 @@ hwclock --systohc --utc
 #bash </dev/tty
 
 configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
-install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
-build > /var/log/install/chroot/build.log 3>&2 2>&1
+#install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
+#build > /var/log/install/chroot/build.log 3>&2 2>&1
 
-RUN_TIME=$(get_runtime)
-export RUN_TIME
-export USER
-export HOST
-SHELL="/bin/zsh"
-export SHELL
+#RUN_TIME=$(get_runtime)
+#export RUN_TIME
+#export USER
+#export HOST
+#SHELL="/bin/zsh"
+#export SHELL
 tput setaf 5 && tput bold && echo "Arch Linux has been installed!" && tput sgr0
-python archey
+#python archey
 
-rm progress_bar.sh
-rm archey
+#rm progress_bar.sh
+#rm archey
