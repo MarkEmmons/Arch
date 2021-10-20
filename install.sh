@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh
+#curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null
 #source defs.sh
 
 # Clean disk and enable encryption
@@ -14,10 +14,10 @@ prepare(){
 	echo
 
 	# Fetch some extra stuff
-	#curl -LJO "$SRC$CHROOT"
-	curl -LJO "https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh"
-	#curl -LJO "$SRC$PBAR"
-	#curl -LJO "$SRC$ARCHEY"
+	#curl -LJO "$SRC$CHROOT" > /dev/null
+	curl -LJO "https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh" > /dev/null
+	#curl -LJO "$SRC$PBAR" > /dev/null
+	#curl -LJO "$SRC$ARCHEY" > /dev/null
 
 	# Dissalow screen blanking for installation
 	setterm -blank 0
@@ -250,5 +250,5 @@ install_base >install_base.log 3>&2 2>&1
 
 tput setaf 7 && tput bold && echo ":: Chrooting into new system..." && tput sgr0
 
-chroot_mnt
-finish
+#chroot_mnt
+#finish
