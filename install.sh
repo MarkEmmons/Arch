@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#wget https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh
+#curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh
 #source defs.sh
 
 # Clean disk and enable encryption
@@ -14,10 +14,10 @@ prepare(){
 	echo
 
 	# Fetch some extra stuff
-	#wget "$SRC$CHROOT"
-	wget "https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh"
-	#wget "$SRC$PBAR"
-	#wget "$SRC$ARCHEY"
+	#curl -LJO "$SRC$CHROOT"
+	curl -LJO "https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh"
+	#curl -LJO "$SRC$PBAR"
+	#curl -LJO "$SRC$ARCHEY"
 
 	# Dissalow screen blanking for installation
 	setterm -blank 0
