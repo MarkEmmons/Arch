@@ -126,7 +126,7 @@ partition(){
 
 	## Use mapper because we want to format the opened partition
 	#mkfs.btrfs /dev/mapper/cryptroot
-	mkfs.btrfs /dev/sda3
+	mkfs.btrfs -f /dev/sda3
 
 	# Create subvolumes
 	#mount /dev/mapper/cryptroot /mnt
@@ -254,5 +254,5 @@ install_base >install_base.log 3>&2 2>&1
 
 tput setaf 7 && tput bold && echo ":: Chrooting into new system..." && tput sgr0
 
-#chroot_mnt
-#finish
+chroot_mnt
+finish

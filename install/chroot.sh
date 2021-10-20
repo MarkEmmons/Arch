@@ -245,7 +245,7 @@ get_runtime(){
 }
 
 # Main
-mkdir /var/log/install/chroot
+mkdir -p /var/log/install/chroot
 #source progress_bar.sh
 
 install_linux > /var/log/install/chroot/install_linux.log 3>&2 2>&1
