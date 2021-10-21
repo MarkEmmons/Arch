@@ -186,9 +186,7 @@ install_base(){
 	#"installing efibootmgr"
 	#"installing grub-bios"
 	#"installing grub-btrfs"
-	#"installing btrfs-progs"
-	#"installing sudo"
-	"installing vim" )
+	"installing btrfs-progs" )
 
 	# Initialize progress bar
 	progress_bar " Installing base system" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
