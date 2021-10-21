@@ -10,8 +10,9 @@
 # Normal chroot stuff
 install_linux(){
 
-	#STAT_ARRAY=( "Generating locales"
-	#"Created symlink"
+	STAT_ARRAY=( "Generating locales"
+	"Created symlink"
+	"grub" )
 	#"installing wpa_supplicant"
 	#"installing vim-runtime"
 	#"installing git"
@@ -21,8 +22,8 @@ install_linux(){
 	#"Found linux image: /boot/vmlinuz-linux" )
 
 	# Initialize progress bar
-	#progress_bar " Installing Linux" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	#BAR_ID=$!
+	progress_bar " Installing Linux" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
 	# Generate locales
 	sed 's|#en_US|en_US|' -i /etc/locale.gen
@@ -56,31 +57,34 @@ install_linux(){
 	#sed "/^GRUB_CMDLINE_LINUX_DEFAULT=/s|quiet|quiet cryptdevice=${CR_UUID}:cryptroot root=/dev/mapper/cryptroot|" -i /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg
 
-	#wait $BAR_ID
+	wait $BAR_ID
 }
 
 # Create user and add some passwords
 configure_users(){
 
-	#STAT_ARRAY=( "Setting root password"
-	#"Root password set"
-	#"Changing shell for root"
-	#"Shell changed"
+	STAT_ARRAY=( "Setting root password"
+	"Root password set"
+	"Changing shell for root"
+	"Shell changed" )
 	#"Adding new user"
 	#"Setting user password"
 	#"Adding user to sudoers"
 	#"New user created" )
 
-	## Initialize progress bar
-	#progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	#BAR_ID=$!
+	# Initialize progress bar
+	progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
 
 	# Choose password for root and change default shell to zsh
 	echo "Setting root password..."
 	echo "root:root" | chpasswd
 	unset $ROOT
-	echo "Root password set."
+	echo "Root password set"
+
+	echo "Changing shell for root..."
 	chsh -s /bin/zsh
+	echo "Shell changed"
 
 	# Give new user root-privileges
 	#echo "Adding new user..."
@@ -93,7 +97,7 @@ configure_users(){
 	#sed "s/^root ALL=(ALL) ALL/root ALL=(ALL) ALL\n$USER ALL=(ALL) ALL/" -i /etc/sudoers
 	#echo "New user created."
 
-	#wait $BAR_ID
+	wait $BAR_ID
 }
 
 # Install X Window System
@@ -244,9 +248,24 @@ get_runtime(){
 	echo "${H_RUN} hours: ${M_RUN}.${S_RUN}"
 }
 
+enable_dhcpcd() {
+
+	STAT_ARRAY=( "dhcpcd" )
+
+	# Initialize progress bar
+	progress_bar " Enabling dhcpcd" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
+
+	# For VirtualBox
+	pacman --needed --noconfirm --noprogressbar -S dhcpcd
+	systemctl enable dhcpcd.service
+
+	wait $BAR_ID
+}
+
 # Main
 mkdir -p /var/log/install/chroot
-#source progress_bar.sh
+source progress_bar.sh
 
 install_linux > /var/log/install/chroot/install_linux.log 3>&2 2>&1
 
@@ -261,10 +280,9 @@ configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
 #install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
 #build > /var/log/install/chroot/build.log 3>&2 2>&1
 
-# vbox
-pacman --needed --noconfirm --noprogressbar -S dhcpcd
-systemctl enable dhcpcd.service
+enable_dhcpcd > /var/log/install/chroot/enable_dhcpcd.log 3>&2 2>&1
 
+get_runtime
 #RUN_TIME=$(get_runtime)
 #export RUN_TIME
 #export USER
@@ -274,5 +292,5 @@ systemctl enable dhcpcd.service
 tput setaf 5 && tput bold && echo "Arch Linux has been installed!" && tput sgr0
 #python archey
 
-#rm progress_bar.sh
+rm progress_bar.sh
 #rm archey
