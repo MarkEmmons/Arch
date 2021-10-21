@@ -11,8 +11,9 @@
 install_linux(){
 
 	STAT_ARRAY=( "Generating locales"
-	"Created symlink"
-	"grub" )
+		"Running mkinitcpio"
+		"Running grub-install"
+		"Running grub-mkconfig" )
 	#"installing wpa_supplicant"
 	#"installing vim-runtime"
 	#"installing git"
