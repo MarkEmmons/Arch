@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#HOST=HOST_NAME_TO_BE
-#ROOT=ROOT_PASS_TO_BE
-#USER=USER_NAME_TO_BE
-#PASS=USER_PASS_TO_BE
+HOST=__HOST_NAME
+ROOT=__ROOT_PASS
+USER=__USER_NAME
+PASS=__USER_PASS
 
-#CACHE=CACHE_VAL_TO_BE
+CACHE=__CACHE
 
 # Normal chroot stuff
 install_linux(){
@@ -67,11 +67,11 @@ configure_users(){
 	STAT_ARRAY=( "Setting root password"
 	"Root password set"
 	"Changing shell for root"
-	"Shell changed" )
-	#"Adding new user"
-	#"Setting user password"
-	#"Adding user to sudoers"
-	#"New user created" )
+	"Shell changed"
+	"Adding new user"
+	"Setting user password"
+	"Adding user to sudoers"
+	"New user created" )
 
 	# Initialize progress bar
 	progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
@@ -79,7 +79,7 @@ configure_users(){
 
 	# Choose password for root and change default shell to zsh
 	echo "Setting root password..."
-	echo "root:root" | chpasswd
+	echo "root:$ROOT" | chpasswd
 	unset $ROOT
 	echo "Root password set"
 
@@ -88,15 +88,15 @@ configure_users(){
 	echo "Shell changed"
 
 	# Give new user root-privileges
-	#echo "Adding new user..."
-	#useradd -m -G wheel -s /bin/zsh $USER
-	#cp /root/.zshrc /home/$USER/.zshrc
-	#echo "Setting user password..."
-	#echo "$USER:$PASS" | chpasswd
-	#unset $PASS
-	#echo "Adding user to sudoers..."
-	#sed "s/^root ALL=(ALL) ALL/root ALL=(ALL) ALL\n$USER ALL=(ALL) ALL/" -i /etc/sudoers
-	#echo "New user created."
+	echo "Adding new user..."
+	useradd -m -G wheel -s /bin/zsh $USER
+	cp /root/.zshrc /home/$USER/.zshrc
+	echo "Setting user password..."
+	echo "$USER:$PASS" | chpasswd
+	unset $PASS
+	echo "Adding user to sudoers..."
+	sed "s/^root ALL=(ALL) ALL/root ALL=(ALL) ALL\n$USER ALL=(ALL) ALL/" -i /etc/sudoers
+	echo "New user created."
 
 	wait $BAR_ID
 }
@@ -118,31 +118,10 @@ install_x(){
 	#GOHUDEPS="xorg-fonts-{encodings,alias} xorg-font-utils fontconfig"
 	GOHUDEPS="xorg-fonts-encodings xorg-fonts-alias xorg-font-utils fontconfig"
 
-	# Run when installing on VirtualBox
-	x_for_vbox(){
-		pacman -S --noconfirm virtualbox-guest-modules-arch virtualbox-guest-utils
-	}
-
-	# Add more space to a non-virtual machine
-	phys_machine_resize(){
-		lvresize -L -120G ArchLinux/pool <<< "y"
-		lvresize -L +20G ArchLinux/rootvol
-		lvresize -L +100G ArchLinux/homevol
-		btrfs filesystem resize max /
-		btrfs filesystem resize max /home
-	}
-
-
 	pacman --needed --noconfirm --noprogressbar -S $PACKAGES1
 	pacman --needed --noconfirm --noprogressbar -S $PACKAGES2
 	pacman --needed --noconfirm --noprogressbar -S $PACKAGES3
 	pacman --needed --noconfirm --noprogressbar -S $GOHUDEPS
-
-	# Run only if this is a VirtualBox guest
-	lspci | grep -e VGA -e 3D | grep VirtualBox > /dev/null && x_for_vbox
-
-	# Do not run if this is a VirtualBox guest
-	lspci | grep -e VGA -e 3D | grep VirtualBox > /dev/null || phys_machine_resize
 
 	echo "exec i3" > /home/$USER/.xinitrc
 	[[ -f /home/$USER/.Xauthority ]] && rm /home/$USER/.Xauthority
@@ -281,7 +260,8 @@ configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
 #install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
 #build > /var/log/install/chroot/build.log 3>&2 2>&1
 
-enable_dhcpcd > /var/log/install/chroot/enable_dhcpcd.log 3>&2 2>&1
+# Enable dhcpcd on VirtualBox
+lspci | grep -e VGA -e 3D | grep VMware > /dev/null && enable_dhcpcd > /var/log/install/chroot/enable_dhcpcd.log 3>&2 2>&1
 
 get_runtime
 #RUN_TIME=$(get_runtime)

@@ -107,6 +107,7 @@ uinfo_dialog(){
 			"Password:"                 7 1 ""    7 25 25 0 1 \
 			"Retype Password:"          8 1 ""    8 25 25 0 1 \
 		2>&1 1>&3)
+
 		RET_CODE=$?
 		set $VALUES
 		CRYPT=$1 RE_CRYPT=$2 HOST=$3 ROOT=$4 RE_ROOT=$5 USER=$6 PASS=$7 RE_PASS=$8
@@ -116,51 +117,51 @@ uinfo_dialog(){
 		unset IFS
 
 		case $RET_CODE in
-		$DIALOG_CANCEL)
-			dialog \
-			--clear \
-			--backtitle "$backtitle" \
-			--yesno "Really quit?" 10 30
-			case $? in
-			$DIALOG_OK)
-				clear
-				break
-				;;
 			$DIALOG_CANCEL)
-				RET_CODE=99
+				dialog \
+				--clear \
+				--backtitle "$backtitle" \
+				--yesno "Really quit?" 10 30
+				case $? in
+					$DIALOG_OK)
+						clear
+						break
+						;;
+					$DIALOG_CANCEL)
+						RET_CODE=99
+						;;
+				esac
+			;;
+			$DIALOG_OK)
+				if [[ -z $CRYPT || -z $RE_CRYPT || -z $HOST || -z $ROOT || \
+					-z $RE_ROOT || -z $USER || -z $PASS || -z $RE_PASS ]]; then
+					ERR_MESSAGE="\Z1(Fill all fields)"
+				elif [[ $CRYPT != $RE_CRYPT || $ROOT != $RE_ROOT || \
+					$PASS != $RE_PASS ]]; then
+					ERR_MESSAGE="\Z1(Two passwords do not match)"
+				else
+					clear
+					unset RE_CRYPT; unset RE_ROOT;  unset RE_PASS
+
+					sed "s|__HOST_NAME|\"$HOST\"|" -i chroot.sh
+					sed "s|__ROOT_PASS|\"$ROOT\"|" -i chroot.sh
+					sed "s|__USER_NAME|\"$USER\"|" -i chroot.sh
+					sed "s|__USER_PASS|\"$PASS\"|" -i chroot.sh
+
+					unset HOST; unset ROOT; unset USER; unset PASS
+					break
+				fi
 				;;
-			esac
-			;;
-		$DIALOG_OK)
-			if [[ -z $CRYPT || -z $RE_CRYPT || -z $HOST || -z $ROOT || \
-				-z $RE_ROOT || -z $USER || -z $PASS || -z $RE_PASS ]]; then
-				ERR_MESSAGE="\Z1(Fill all fields)"
-			elif [[ $CRYPT != $RE_CRYPT || $ROOT != $RE_ROOT || \
-				$PASS != $RE_PASS ]]; then
-				ERR_MESSAGE="\Z1(Two passwords do not match)"
-			else
+			$DIALOG_ESC)
 				clear
-				unset RE_CRYPT; unset RE_ROOT;  unset RE_PASS
-
-				sed "s|HOST_NAME_TO_BE|\"$HOST\"|" -i chroot.sh
-				sed "s|ROOT_PASS_TO_BE|\"$ROOT\"|" -i chroot.sh
-				sed "s|USER_NAME_TO_BE|\"$USER\"|" -i chroot.sh
-				sed "s|USER_PASS_TO_BE|\"$PASS\"|" -i chroot.sh
-
-				unset HOST; unset ROOT; unset USER; unset PASS
-				break
-			fi
-			;;
-		$DIALOG_ESC)
-			clear
-			echo "Escape key pressed"
-			exit
-			;;
-		*)
-			clear
-			echo "Return code was $RET_CODE"
-			exit
-			;;
+				echo "Escape key pressed"
+				exit
+				;;
+			*)
+				clear
+				echo "Return code was $RET_CODE"
+				exit
+				;;
 		esac
 	done
 }

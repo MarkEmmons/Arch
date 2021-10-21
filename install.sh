@@ -27,7 +27,7 @@ prepare(){
 	ln -s /usr/share/zoneinfo/US/Central /etc/localtime
 	hwclock --systohc --utc
 
-	#uinfo_dialog
+	uinfo_dialog
 
 	# Echo start time
 	date > time.log
@@ -154,6 +154,9 @@ partition(){
 update_mirrors(){
 
 	STAT_ARRAY=( "Ranking mirrors"
+	"by download speed"
+	"Server"
+	"INFO"
 	"Got new mirror list" )
 
 	# Initialize progress bar
@@ -161,7 +164,7 @@ update_mirrors(){
 	BAR_ID=$!
 
 	echo "Ranking mirrors..."
-	reflector --latest 15 --sort rate --save /etc/pacman.d/mirrorlist
+	reflector --latest 5 --sort rate --verbose --save /etc/pacman.d/mirrorlist
 	echo "Got new mirror list!"
 	wait $BAR_ID
 }
@@ -191,7 +194,7 @@ install_base(){
 	progress_bar " Installing base system" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
-	pacstrap /mnt base linux linux-firmware efibootmgr grub-bios grub-btrfs btrfs-progs sudo vim
+	pacstrap /mnt base linux linux-firmware efibootmgr grub-bios grub-btrfs btrfs-progs sudo
 
 	## Copy over relevant files
 	mkdir -p /mnt/var/log/install
@@ -227,8 +230,7 @@ echo ""
 tput setaf 7 && tput bold && echo ":: Running installation scripts..." && tput sgr0
 
 #cache_packages >cache_packages.log 3>&2 2>&1
-
-sed "s|CACHE_VAL_TO_BE|\"$CACHE\"|" -i chroot.sh
+#sed "s|__CACHE|\"$CACHE\"|" -i chroot.sh
 
 begin >begin.log 3>&2 2>&1
 #encrypt >encrypt.log 3>&2 2>&1
