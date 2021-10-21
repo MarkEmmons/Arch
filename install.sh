@@ -27,7 +27,7 @@ prepare(){
 	ln -s /usr/share/zoneinfo/US/Central /etc/localtime
 	hwclock --systohc --utc
 
-	uinfo_dialog
+	#uinfo_dialog
 
 	# Echo start time
 	date > time.log

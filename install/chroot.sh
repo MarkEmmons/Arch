@@ -1,11 +1,11 @@
 #!/bin/bash
 
-HOST=__HOST_NAME
-ROOT=__ROOT_PASS
-USER=__USER_NAME
-PASS=__USER_PASS
+#HOST=__HOST_NAME
+#ROOT=__ROOT_PASS
+#USER=__USER_NAME
+#PASS=__USER_PASS
 
-CACHE=__CACHE
+#CACHE=__CACHE
 
 # Normal chroot stuff
 install_linux(){
