@@ -77,6 +77,9 @@ configure_users(){
 	progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
+	USER="mark"
+	PASS="mark"
+
 	# Choose password for root and change default shell to zsh
 	echo "Setting root password..."
 	echo "root:$ROOT" | chpasswd
