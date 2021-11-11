@@ -218,7 +218,7 @@ finish(){
 	swapoff /dev/sda2
 	read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n' < /dev/tty
 	tput cnorm
-	#reboot
+	reboot
 }
 
 prepare
