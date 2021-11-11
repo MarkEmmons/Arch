@@ -109,7 +109,7 @@ configure_users(){
 # Install X Window System
 install_x(){
 
-	STAT_ARRAY=("installing bspwm"
+	STAT_ARRAY=("Installing xorg"
 	"Installing bspwm configs"
 	"Generating xinitrc")
 
@@ -117,6 +117,7 @@ install_x(){
 	progress_bar " Installing Xorg" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
+	echo "Installing xorg..."
 	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkdrc dmenu xterm feh
 
 	mkdir -p /home/$USER/.config/bspwm/
@@ -267,12 +268,12 @@ enable_dhcpcd() {
 mkdir -p /var/log/install/chroot
 source progress_bar.sh
 
-install_linux > /var/log/install/chroot/install_linux.log 3>&2 2>&1
-
 # Configure clock.
 [[ -f /etc/localtime ]] && rm /etc/localtime
 ln -s /usr/share/zoneinfo/US/Central /etc/localtime
 hwclock --systohc --utc
+
+install_linux > /var/log/install/chroot/install_linux.log 3>&2 2>&1
 
 #bash </dev/tty
 
