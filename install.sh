@@ -214,8 +214,8 @@ chroot_mnt(){
 
 # Unmount and reboot
 finish(){
-	umount -R /mnt
-	swapoff /dev/sda2
+	#umount -R /mnt
+	#swapoff /dev/sda2
 	read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n' < /dev/tty
 	tput cnorm
 	#reboot
