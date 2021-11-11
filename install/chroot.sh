@@ -50,7 +50,8 @@ install_linux(){
 	mkinitcpio -p linux
 
 	# Install and configure grub
-	pacman --needed --noconfirm --noprogressbar -S zsh parallel wget openssh dialog wpa_actiond wpa_supplicant vim git tmux
+	pacman --needed --noconfirm --noprogressbar -S zsh vim git tmux
+	#pacman --needed --noconfirm --noprogressbar -S parallel wget openssh dialog wpa_actiond wpa_supplicant
 	echo -e "\nRunning grub-install"
 	grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 	echo -e "\nRunning grub-mkconfig"
@@ -77,6 +78,7 @@ configure_users(){
 	progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
+	ROOT="root"
 	USER="mark"
 	PASS="mark"
 
