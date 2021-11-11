@@ -109,8 +109,9 @@ configure_users(){
 # Install X Window System
 install_x(){
 
-	STAT_ARRAY=("installing xorg-xinit"
-	"installing bspwm")
+	STAT_ARRAY=("installing bspwm"
+	"Installing bspwm configs"
+	"Generating xinitrc")
 
 	# Initialize progress bar
 	progress_bar " Installing Xorg" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
@@ -121,11 +122,13 @@ install_x(){
 	mkdir -p /home/$USER/.config/bspwm/
 	mkdir -p /home/$USER/.config/sxhkd/
 
+	echo "Installing bspwm configs..."
 	install -Dm755 /usr/share/doc/bspwm/examples/bspwmrc /home/$USER/.config/bspwm/bspwmrc
 	install -Dm644 /usr/share/doc/bspwm/examples/sxhkdrc /home/$USER/.config/sxhkd/sxhkdrc
-	
+
 	sed 's|urxvt|xterm|' -i /home/$USER/.config/sxhkd/sxhkdrc
 
+	echo "Generating xinitrc..."
 	echo "sxhkd &" > /home/$USER/.xinitrc
 	echo "exec bspwm" >> /home/$USER/.xinitrc
 
@@ -274,7 +277,7 @@ hwclock --systohc --utc
 #bash </dev/tty
 
 configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
-#install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
+install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
 #build > /var/log/install/chroot/build.log 3>&2 2>&1
 
 # Enable dhcpcd on VirtualBox
