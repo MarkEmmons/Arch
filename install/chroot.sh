@@ -109,26 +109,38 @@ configure_users(){
 # Install X Window System
 install_x(){
 
-	STAT_ARRAY=("installing xorg-server-common"
-	"installing xorg-xinit")
+	STAT_ARRAY=("installing xorg-xinit"
+	"installing bspwm")
 
 	# Initialize progress bar
 	progress_bar " Installing Xorg" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
-	PACKAGES1="alsa-utils mesa xf86-video-{vesa,intel,fbdev} xf86-input-synaptics"
-	PACKAGES2="i3 dmenu conky stow xbindkeys feh"
-	#PACKAGES3="xorg-{server,xinit,xclock,twm,xprop,xlsfonts,xfontsel}"
-	PACKAGES3="xorg-server xorg-xinit xorg-xclock xorg-twm xorg-xprop xorg-xlsfonts xorg-xfontsel"
-	#GOHUDEPS="xorg-fonts-{encodings,alias} xorg-font-utils fontconfig"
-	GOHUDEPS="xorg-fonts-encodings xorg-fonts-alias xorg-font-utils fontconfig"
+	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkdrc dmenu xterm feh
 
-	pacman --needed --noconfirm --noprogressbar -S $PACKAGES1
-	pacman --needed --noconfirm --noprogressbar -S $PACKAGES2
-	pacman --needed --noconfirm --noprogressbar -S $PACKAGES3
-	pacman --needed --noconfirm --noprogressbar -S $GOHUDEPS
+	mkdir -p /home/$USER/.config/bspwm/
+	mkdir -p /home/$USER/.config/sxhkd/
 
-	echo "exec i3" > /home/$USER/.xinitrc
+	install -Dm755 /usr/share/doc/bspwm/examples/bspwmrc /home/$USER/.config/bspwm/bspwmrc
+	install -Dm644 /usr/share/doc/bspwm/examples/sxhkdrc /home/$USER/.config/sxhkd/sxhkdrc
+	
+	sed 's|urxvt|xterm|' -i /home/$USER/.config/sxhkd/sxhkdrc
+
+	echo "sxhkd &" > /home/$USER/.xinitrc
+	echo "exec bspwm" >> /home/$USER/.xinitrc
+
+	#PACKAGES1="alsa-utils mesa xf86-video-{vesa,intel,fbdev} xf86-input-synaptics"
+	#PACKAGES2="bspwm sxhkd dmenu feh" # conky stow xbindkeys
+	##PACKAGES3="xorg-{server,xinit,xclock,twm,xprop,xlsfonts,xfontsel}"
+	#PACKAGES3="xorg-server xorg-xinit xorg-xclock xorg-twm xorg-xprop xorg-xlsfonts xorg-xfontsel"
+	##GOHUDEPS="xorg-fonts-{encodings,alias} xorg-font-utils fontconfig"
+	#GOHUDEPS="xorg-fonts-encodings xorg-fonts-alias xorg-font-utils fontconfig"
+	#
+	#pacman --needed --noconfirm --noprogressbar -S $PACKAGES1
+	#pacman --needed --noconfirm --noprogressbar -S $PACKAGES2
+	#pacman --needed --noconfirm --noprogressbar -S $PACKAGES3
+	#pacman --needed --noconfirm --noprogressbar -S $GOHUDEPS
+
 	[[ -f /home/$USER/.Xauthority ]] && rm /home/$USER/.Xauthority
 
 	wait $BAR_ID
