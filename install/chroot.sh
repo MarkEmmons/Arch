@@ -118,7 +118,7 @@ install_x(){
 	BAR_ID=$!
 
 	echo "Installing xorg..."
-	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkdrc dmenu xterm feh
+	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu xterm feh
 
 	mkdir -p /home/$USER/.config/bspwm/
 	mkdir -p /home/$USER/.config/sxhkd/
