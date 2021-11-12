@@ -7,6 +7,11 @@
 
 #CACHE=__CACHE
 
+HOST="Arch"
+ROOT="root"
+USER="mark"
+PASS="mark"
+
 # Normal chroot stuff
 install_linux(){
 
@@ -69,10 +74,6 @@ configure_users(){
 	# Initialize progress bar
 	progress_bar " Configuring users" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
-
-	ROOT="root"
-	USER="mark"
-	PASS="mark"
 
 	# Choose password for root and change default shell to zsh
 	echo "Setting root password..."
@@ -164,6 +165,10 @@ build(){
 	# Install Rust Tools
 	echo "Installing rust..."
 	pacman --needed --noconfirm --noprogressbar -S rust
+
+
+	# Install LaTex Tools
+	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf
 
 
 	# Install Console Tools
