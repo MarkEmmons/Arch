@@ -4,8 +4,8 @@
 get_dotfiles(){
 
 	# Retrieve dotfiles
-	rm .xinitrc
-	rm .zshrc
+	[[ -f .xinitrc ]] && rm -f .xinitrc
+	[[ -f .zshrc ]] && rm -f .zshrc
 	git clone https://github.com/MarkEmmons/dotfiles.git
 
 	# Add dotfile scripts to path and make executable
@@ -17,8 +17,6 @@ get_dotfiles(){
 }
 
 cd $HOME
-
-echo "Current directory: $pwd"
 
 # Get dotfiles
 get_dotfiles
