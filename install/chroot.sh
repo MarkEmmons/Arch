@@ -111,7 +111,7 @@ install_x(){
 	BAR_ID=$!
 
 	echo "Installing xorg..."
-	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu xterm feh
+	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu xterm feh zsh
 
 	mkdir -p /home/$USER/.config/bspwm/
 	mkdir -p /home/$USER/.config/sxhkd/
@@ -173,7 +173,7 @@ build(){
 
 	# Install Console Tools
 	echo "Installing command line tools..."
-	pacman --needed --noconfirm --noprogressbar -S zsh vim git tmux
+	pacman --needed --noconfirm --noprogressbar -S vim git tmux
 
 
 	# Install Other Tools
@@ -264,8 +264,8 @@ hwclock --systohc --utc
 
 install_linux > /var/log/install/chroot/install_linux.log 3>&2 2>&1
 install_x > /var/log/install/chroot/install_x.log 3>&2 2>&1
-build > /var/log/install/chroot/build.log 3>&2 2>&1
 configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
+build > /var/log/install/chroot/build.log 3>&2 2>&1
 
 # Enable dhcpcd on VirtualBox
 lspci | grep -e VGA -e 3D | grep VMware > /dev/null && enable_dhcpcd > /var/log/install/chroot/enable_dhcpcd.log 3>&2 2>&1
