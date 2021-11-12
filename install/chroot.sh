@@ -102,29 +102,16 @@ configure_users(){
 # Install X Window System
 install_x(){
 
-	STAT_ARRAY=("Installing xorg"
-		"Installing bspwm configs"
-		"Generating xinitrc")
+	STAT_ARRAY=( "Installing xorg"
+	"Xorg installed" )
 
 	# Initialize progress bar
 	progress_bar " Installing Xorg" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
 	echo "Installing xorg..."
-	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu xterm feh zsh
-
-	mkdir -p /home/$USER/.config/bspwm/
-	mkdir -p /home/$USER/.config/sxhkd/
-
-	echo "Installing bspwm configs..."
-	install -Dm755 /usr/share/doc/bspwm/examples/bspwmrc /home/$USER/.config/bspwm/bspwmrc
-	install -Dm644 /usr/share/doc/bspwm/examples/sxhkdrc /home/$USER/.config/sxhkd/sxhkdrc
-
-	sed 's|urxvt|xterm|' -i /home/$USER/.config/sxhkd/sxhkdrc
-
-	echo "Generating xinitrc..."
-	echo "sxhkd &" > /home/$USER/.xinitrc
-	echo "exec bspwm" >> /home/$USER/.xinitrc
+	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu xterm feh
+	echo "Xorg installed"
 
 	[[ -f /home/$USER/.Xauthority ]] && rm /home/$USER/.Xauthority
 
@@ -168,17 +155,30 @@ build(){
 
 
 	# Install LaTex Tools
+	# tex-live
+	#vimtex
 	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf
+#Plug 'lervag/vimtex'
+#let g:tex_flavor='latex'
+#let g:vimtex_view_method='zathura'
+#let g:vimtex_quickfix_mode=0
+#set conceallevel=1
+#let g:tex_conceal='abdmg'
+
+#setlocal spell
+#set spelllang=nl,en_gb
+#inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 
 	# Install Console Tools
 	echo "Installing command line tools..."
-	pacman --needed --noconfirm --noprogressbar -S vim git tmux
+	pacman --needed --noconfirm --noprogressbar -S vim tmux
 
 
 	# Install Other Tools
 	echo "Installing additional tools..."
 	pacman --needed --noconfirm --noprogressbar -S stow luakit parallel imagemagick scrot htop
+
 
 	## Configure docker, for more info consult the wiki
 	#pacman --needed --noconfirm --noprogressbar -S docker docker-machine
