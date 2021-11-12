@@ -155,19 +155,7 @@ build(){
 
 
 	# Install LaTex Tools
-	# tex-live
-	#vimtex
 	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf
-#Plug 'lervag/vimtex'
-#let g:tex_flavor='latex'
-#let g:vimtex_view_method='zathura'
-#let g:vimtex_quickfix_mode=0
-#set conceallevel=1
-#let g:tex_conceal='abdmg'
-
-#setlocal spell
-#set spelllang=nl,en_gb
-#inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 
 	# Install Console Tools
@@ -177,7 +165,7 @@ build(){
 
 	# Install Other Tools
 	echo "Installing additional tools..."
-	pacman --needed --noconfirm --noprogressbar -S stow luakit parallel imagemagick scrot htop
+	pacman --needed --noconfirm --noprogressbar -S luakit imagemagick scrot htop
 
 
 	## Configure docker, for more info consult the wiki
