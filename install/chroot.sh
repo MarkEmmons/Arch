@@ -147,7 +147,7 @@ build(){
 
 	# Fetch scripts to be run by $USER
 	echo "Running user scripts..."
-	wget https://raw.github.com/MarkEmmons/Arch/master/install/user_scripts.sh
+	curl -LJO https://raw.github.com/MarkEmmons/Arch/master/install/user_scripts.sh
 	mv user_scripts.sh /usr/bin/user_scripts
 	chmod a+x /usr/bin/user_scripts
 
