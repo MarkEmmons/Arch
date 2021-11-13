@@ -45,11 +45,11 @@ vbox_begin(){
 
 	# Zap any former entry
 	echo "Zapping former partitions"
-	sgdisk --zap-all /dev/sda
+	sgdisk --zap-all /dev/nvme0n1
 
 	# Create partitions. Instructions can be modified in disk.txt
 	echo "Creating new partitions"
-	gdisk /dev/sda <<< "n
+	gdisk /dev/nvme0n1 <<< "n
 
 
 +300M
@@ -84,11 +84,11 @@ phys_begin(){
 
 	# Zap any former entry
 	echo "Zapping former partitions"
-	sgdisk --zap-all /dev/sda
+	sgdisk --zap-all /dev/nvme0n1
 
 	# Create partitions. Instructions can be modified in disk.txt
 	echo "Creating new partitions"
-	gdisk /dev/sda <<< "n
+	gdisk /dev/nvme0n1 <<< "n
 
 
 +300M
@@ -129,12 +129,12 @@ encrypt(){
 
 	echo "Encrypting disk..."
 	echo -n "$CRYPT" | \
-	cryptsetup luksFormat /dev/sda3
+	cryptsetup luksFormat /dev/nvme0n13
 
 	echo "Disk successfully encrypted."
 	echo "Unlocking disk..."
 	echo -n "$CRYPT" | \
-	cryptsetup luksOpen /dev/sda3 cryptroot
+	cryptsetup luksOpen /dev/nvme0n13 cryptroot
 	unset CRYPT
 	echo "Disk successfully unlocked."
 	echo
@@ -156,20 +156,20 @@ partition(){
 
 	# Format the filesystems on each logical volume
 	echo "Formatting boot partition..."
-	mkfs.fat -F32 /dev/sda1
+	mkfs.fat -F32 /dev/nvme0n11
 	echo "Formatting swap partition..."
-	mkswap /dev/sda2
-	swapon /dev/sda2
+	mkswap /dev/nvme0n12
+	swapon /dev/nvme0n12
 
 	## Use mapper because we want to format the opened partition
 	echo "Formatting root partition..."
 	#mkfs.btrfs /dev/mapper/cryptroot
-	mkfs.btrfs -f /dev/sda3
+	mkfs.btrfs -f /dev/nvme0n13
 
 	# Create subvolumes
 	echo "Creating subvolumes..."
 	#mount /dev/mapper/cryptroot /mnt
-	mount /dev/sda3 /mnt
+	mount /dev/nvme0n13 /mnt
 	cd /mnt
 	btrfs subvolume create @
 	btrfs subvolume create @home
@@ -179,12 +179,12 @@ partition(){
 	# Mount the filesystems
 	echo "Mounting filesystem..."
 	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/mapper/cryptroot /mnt
-	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/sda3 /mnt
+	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/nvme0n13 /mnt
 	mkdir /mnt/home
 	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/mapper/cryptroot /mnt/home
-	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/sda3 /mnt/home
+	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/nvme0n13 /mnt/home
 	mkdir /mnt/boot
-	mount /dev/sda1 /mnt/boot
+	mount /dev/nvme0n11 /mnt/boot
 
 	wait $BAR_ID
 }
@@ -254,7 +254,7 @@ chroot_mnt(){
 # Unmount and reboot
 finish(){
 	umount -R /mnt
-	swapoff /dev/sda2
+	swapoff /dev/nvme0n12
 	read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n' < /dev/tty
 	tput cnorm
 	reboot
