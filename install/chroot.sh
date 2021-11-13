@@ -110,7 +110,7 @@ install_x(){
 	BAR_ID=$!
 
 	echo "Installing xorg..."
-	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu xterm feh
+	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu feh
 	echo "Xorg installed"
 
 	[[ -f /home/$USER/.Xauthority ]] && rm /home/$USER/.Xauthority
@@ -146,7 +146,7 @@ build(){
 
 	# Install C/C++ Tools
 	echo "Installing gcc..."
-	pacman --needed --noconfirm --noprogressbar -S gcc gdb valgrind
+	pacman --needed --noconfirm --noprogressbar -S gcc gdb make valgrind
 
 
 	# Install Rust Tools
@@ -155,12 +155,12 @@ build(){
 
 
 	# Install LaTex Tools
-	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf
+	pacman --needed --noconfirm --noprogressbar -S texlive-core zathura zathura-pdf-mupdf
 
 
 	# Install Console Tools
 	echo "Installing command line tools..."
-	pacman --needed --noconfirm --noprogressbar -S vim tmux
+	pacman --needed --noconfirm --noprogressbar -S alacritty vim tmux
 
 
 	# Install Other Tools
