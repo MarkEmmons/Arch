@@ -11,11 +11,11 @@ prepare(){
 	echo
 
 	# Fetch some extra stuff
-	curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
+	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
 	source defs.sh
 
-	curl -LJO "$SRC$CHROOT" > /dev/null 3>&2 2>&1
-	curl -LJO "$SRC$PBAR" > /dev/null 3>&2 2>&1
+	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO "$SRC$CHROOT" > /dev/null 3>&2 2>&1
+	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO "$SRC$PBAR" > /dev/null 3>&2 2>&1
 	#curl -LJO "$SRC$ARCHEY" > /dev/null 3>&2 2>&1
 	source progress_bar.sh
 
@@ -33,7 +33,46 @@ prepare(){
 	date > time.log
 }
 
-begin(){
+vbox_begin(){
+
+	STAT_ARRAY=( "Zapping former partitions"
+	"Creating new partitions"
+	"Done" )
+
+	# Initialize progress bar
+	progress_bar " (VBOX) Getting started" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
+	BAR_ID=$!
+
+	# Zap any former entry
+	echo "Zapping former partitions"
+	sgdisk --zap-all /dev/sda
+
+	# Create partitions. Instructions can be modified in disk.txt
+	echo "Creating new partitions"
+	gdisk /dev/sda <<< "n
+
+
++300M
+ef00
+n
+
+
++1G
+8200
+n
+
+
+
+
+w
+Y
+"
+
+	echo "Done"
+	wait $BAR_ID
+}
+
+phys_begin(){
 
 	STAT_ARRAY=( "Zapping former partitions"
 	"Creating new partitions"
@@ -57,7 +96,7 @@ ef00
 n
 
 
-+1G
++4G
 8200
 n
 
@@ -230,7 +269,8 @@ tput setaf 7 && tput bold && echo ":: Running installation scripts..." && tput s
 #cache_packages >cache_packages.log 3>&2 2>&1
 #sed "s|__CACHE|\"$CACHE\"|" -i chroot.sh
 
-begin >begin.log 3>&2 2>&1
+lspci | grep -e VGA -e 3D | grep VMware > /dev/null && vbox_begin >begin.log 3>&2 2>&1
+lspci | grep -e VGA -e 3D | grep VMware > /dev/null || phys_begin >begin.log 3>&2 2>&1
 #encrypt >encrypt.log 3>&2 2>&1
 partition >partition.log 3>&2 2>&1
 update_mirrors >update_mirrors.log 3>&2 2>&1
