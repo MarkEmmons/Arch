@@ -110,7 +110,7 @@ install_x(){
 	BAR_ID=$!
 
 	echo "Installing xorg..."
-	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd dmenu feh
+	pacman --needed --noconfirm --noprogressbar -S xorg xorg-xinit bspwm sxhkd rofi feh
 	echo "Xorg installed"
 
 	[[ -f /home/$USER/.Xauthority ]] && rm /home/$USER/.Xauthority
