@@ -76,3 +76,18 @@ vim /etc/fstab
 # replace UUID w/ /dev/mapper/swap
 
 mount -a # no errors?
+sudo pacman -S wifi-menu
+sudo pacman -S netctl
+sudo pacman -S dialog
+sudo pacman -S reflector
+sudo pacman -S dialog
+sudo pacman -S dialog
+sudo pacman -S rsync
+sudo pacman -S dialog
+sudo pacman -S dialog
+sudo pacman -S dialog
+sudo pacman -S wpa_supplicant
+sudo pacman -S ifconfig
+sudo pacman -S webkit2gtk
+sudo pacman -S gstreamer
+sudo pacman -S openssh
