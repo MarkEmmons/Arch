@@ -231,7 +231,7 @@ install_base(){
 	progress_bar " Installing base system" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
 	BAR_ID=$!
 
-	pacstrap /mnt base linux linux-firmware efibootmgr grub-bios grub-btrfs btrfs-progs sudo zsh git stow parallel
+	pacstrap /mnt base base-devel linux linux-firmware efibootmgr grub-bios grub-btrfs btrfs-progs sudo zsh git stow parallel
 
 	## Copy over relevant files
 	mkdir -p /mnt/var/log/install
