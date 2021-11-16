@@ -155,7 +155,7 @@ build(){
 
 
 	# Install LaTex Tools
-	pacman --needed --noconfirm --noprogressbar -S texlive-core zathura zathura-pdf-mupdf
+	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf
 
 
 	# Install Console Tools
