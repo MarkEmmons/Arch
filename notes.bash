@@ -91,3 +91,9 @@ sudo pacman -S ifconfig
 sudo pacman -S webkit2gtk
 sudo pacman -S gstreamer
 sudo pacman -S openssh
+
+git clone git@github.com:thesofproject/sof-bin.git
+cd sof-bin
+chmod +x install.sh
+sudo ./install.sh v1.9.x/v1.9-rc1
+sudo reboot
