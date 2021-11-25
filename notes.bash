@@ -91,9 +91,50 @@ sudo pacman -S ifconfig
 sudo pacman -S webkit2gtk
 sudo pacman -S gstreamer
 sudo pacman -S openssh
+sudo pacman -S tllocalmgr
+sudo pacman -S tlmgr
+sudo pacman -S base-devel
+sudo pacman -S --needed base-devel
+sudo pacman -S firefox
+sudo pacman -S alsa
+sudo pacman -S alsamixer
+sudo pacman -S alsa-utils
+sudo pacman -S mesa
+sudo pacman -S xf86-input-synaptics
+sudo pacman -S alsa
+sudo pacman -S linux-sound-base
+sudo pacman -S gedit
+sudo pacman -S alsa-sof-firmware
+sudo pacman -S alsa-firmware
+sudo pacman -S picom
+sudo pacman -S xorg-xbacklight
+sudo pacman -S fprintd
 
+# Enable Audio
 git clone git@github.com:thesofproject/sof-bin.git
 cd sof-bin
 chmod +x install.sh
 sudo ./install.sh v1.9.x/v1.9-rc1
 sudo reboot
+
+# Steam
+sudo vim /etc/pacman.conf 
+sudo pacman -Syu
+sudo pacman -S steam
+sudo pacman -S lib32-mesa
+lspci -v | grep -A1 -e VGA -e 3D
+pacman -Ss xf86-video
+sudo pacman -S xf86-video-intel
+sudo pacman -S mesa
+sudo pacman -S ttf-liberation
+sudo pacman -S lib32-systemd
+
+# Spotify
+paru -S spotify
+ping archlinux.org
+netctl list
+ping archlinux.org
+spotify --force-device-scale-factor=1.5
+ls /usr/share/applications
+sudo vim /usr/share/applications/spotify.desktop
+
