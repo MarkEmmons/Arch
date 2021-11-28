@@ -142,3 +142,9 @@ sudo vim /usr/share/applications/spotify.desktop
 git clone git://github.com/noahfrederick/vim-noctu.git ~/.vim/bundle/noctu\
 mv .vim/bundle/noctu/colors .vim/
 rm -rf .vim/bundle/noctu
+
+# AUR packages
+paru -S spotify
+paru -S expressvpn
+paru -S brave-bin
+paru -S nerd-fonts-victor-mono
