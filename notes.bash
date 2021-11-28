@@ -40,7 +40,7 @@ pacstrap /mnt base linux linux-firmware git vim btrfs-progs
 genfstab -U /mnt/etc/fstab
 arch-chroot /mnt
 
-:)
+# :)
 
 # https://gitlab.com/eflinux/arch-basic
 grub-btrfs
@@ -138,3 +138,7 @@ spotify --force-device-scale-factor=1.5
 ls /usr/share/applications
 sudo vim /usr/share/applications/spotify.desktop
 
+# Noctu colorscheme
+git clone git://github.com/noahfrederick/vim-noctu.git ~/.vim/bundle/noctu\
+mv .vim/bundle/noctu/colors .vim/
+rm -rf .vim/bundle/noctu
