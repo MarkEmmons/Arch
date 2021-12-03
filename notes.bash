@@ -148,3 +148,6 @@ paru -S spotify
 paru -S expressvpn
 paru -S brave-bin
 paru -S nerd-fonts-victor-mono
+
+sudo pacman -S discord
+sudo pacman -S texlive-most
