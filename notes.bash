@@ -118,7 +118,7 @@ sudo ./install.sh v1.9.x/v1.9-rc1
 sudo reboot
 
 # Steam
-sudo vim /etc/pacman.conf 
+sudo vim /etc/pacman.conf
 sudo pacman -Syu
 sudo pacman -S steam
 sudo pacman -S lib32-mesa
