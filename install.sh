@@ -1,5 +1,18 @@
 #!/bin/bash
 
+$device="nvme0n1"
+$device_p1="nvme0n1p1"
+$device_p2="nvme0n1p2"
+$device_p3="nvme0n1p3"
+
+set_vbox_device(){
+
+	$device="sda"
+	$device_p1="sda1"
+	$device_p2="sda2"
+	$device_p3="sda3"
+}
+
 # Clean disk and enable encryption
 prepare(){
 
@@ -33,45 +46,6 @@ prepare(){
 	date > time.log
 }
 
-vbox_begin(){
-
-	STAT_ARRAY=( "Zapping former partitions"
-	"Creating new partitions"
-	"Done" )
-
-	# Initialize progress bar
-	progress_bar " (VBOX) Getting started" ${#STAT_ARRAY[@]} "${STAT_ARRAY[@]}" &
-	BAR_ID=$!
-
-	# Zap any former entry
-	echo "Zapping former partitions"
-	sgdisk --zap-all /dev/nvme0n1
-
-	# Create partitions. Instructions can be modified in disk.txt
-	echo "Creating new partitions"
-	gdisk /dev/nvme0n1 <<< "n
-
-
-+300M
-ef00
-n
-
-
-+1G
-8200
-n
-
-
-
-
-w
-Y
-"
-
-	echo "Done"
-	wait $BAR_ID
-}
-
 phys_begin(){
 
 	STAT_ARRAY=( "Zapping former partitions"
@@ -84,11 +58,11 @@ phys_begin(){
 
 	# Zap any former entry
 	echo "Zapping former partitions"
-	sgdisk --zap-all /dev/nvme0n1
+	sgdisk --zap-all "/dev/${device}"
 
 	# Create partitions. Instructions can be modified in disk.txt
 	echo "Creating new partitions"
-	gdisk /dev/nvme0n1 <<< "n
+	gdisk "/dev/${device}" <<< "n
 
 
 +300M
@@ -129,12 +103,12 @@ encrypt(){
 
 	echo "Encrypting disk..."
 	echo -n "$CRYPT" | \
-	cryptsetup luksFormat /dev/nvme0n13
+	cryptsetup luksFormat "/dev/${device_p3}"
 
 	echo "Disk successfully encrypted."
 	echo "Unlocking disk..."
 	echo -n "$CRYPT" | \
-	cryptsetup luksOpen /dev/nvme0n13 cryptroot
+	cryptsetup luksOpen "/dev/${device_p3}" cryptroot
 	unset CRYPT
 	echo "Disk successfully unlocked."
 	echo
@@ -156,20 +130,20 @@ partition(){
 
 	# Format the filesystems on each logical volume
 	echo "Formatting boot partition..."
-	mkfs.fat -F32 /dev/nvme0n11
+	mkfs.fat -F32 "/dev/${device_p1}"
 	echo "Formatting swap partition..."
-	mkswap /dev/nvme0n12
-	swapon /dev/nvme0n12
+	mkswap "/dev/${device_p2}"
+	swapon "/dev/${device_p2}"
 
 	## Use mapper because we want to format the opened partition
 	echo "Formatting root partition..."
 	#mkfs.btrfs /dev/mapper/cryptroot
-	mkfs.btrfs -f /dev/nvme0n13
+	mkfs.btrfs -f "/dev/${device_p3}"
 
 	# Create subvolumes
 	echo "Creating subvolumes..."
 	#mount /dev/mapper/cryptroot /mnt
-	mount /dev/nvme0n13 /mnt
+	mount "/dev/${device_p3}" /mnt
 	cd /mnt
 	btrfs subvolume create @
 	btrfs subvolume create @home
@@ -179,12 +153,12 @@ partition(){
 	# Mount the filesystems
 	echo "Mounting filesystem..."
 	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/mapper/cryptroot /mnt
-	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ /dev/nvme0n13 /mnt
+	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@ "/dev/${device_p3}" /mnt
 	mkdir /mnt/home
 	#mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/mapper/cryptroot /mnt/home
-	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home /dev/nvme0n13 /mnt/home
+	mount -o noatime,compress=zstd,space_cache,discard=async,subvol=@home "/dev/${device_p3}" /mnt/home
 	mkdir /mnt/boot
-	mount /dev/nvme0n11 /mnt/boot
+	mount "/dev/${device_p1}" /mnt/boot
 
 	wait $BAR_ID
 }
@@ -254,7 +228,7 @@ chroot_mnt(){
 # Unmount and reboot
 finish(){
 	umount -R /mnt
-	swapoff /dev/nvme0n12
+	swapoff "/dev/${device_p2}"
 	read -n1 -rsp $'Press any key to continue or Ctrl+C to exit...\n' < /dev/tty
 	tput cnorm
 	reboot
@@ -269,8 +243,9 @@ tput setaf 7 && tput bold && echo ":: Running installation scripts..." && tput s
 #cache_packages >cache_packages.log 3>&2 2>&1
 #sed "s|__CACHE|\"$CACHE\"|" -i chroot.sh
 
-lspci | grep -e VGA -e 3D | grep VMware > /dev/null && vbox_begin >begin.log 3>&2 2>&1
-lspci | grep -e VGA -e 3D | grep VMware > /dev/null || phys_begin >begin.log 3>&2 2>&1
+lspci | grep -e VGA -e 3D | grep VMware > /dev/null && set_vbox_device
+
+begin >begin.log 3>&2 2>&1
 #encrypt >encrypt.log 3>&2 2>&1
 partition >partition.log 3>&2 2>&1
 update_mirrors >update_mirrors.log 3>&2 2>&1
