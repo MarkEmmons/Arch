@@ -1,16 +1,16 @@
 #!/bin/bash
 
-$device="nvme0n1"
-$device_p1="nvme0n1p1"
-$device_p2="nvme0n1p2"
-$device_p3="nvme0n1p3"
+device="nvme0n1"
+device_p1="nvme0n1p1"
+device_p2="nvme0n1p2"
+device_p3="nvme0n1p3"
 
 set_vbox_device(){
 
-	$device="sda"
-	$device_p1="sda1"
-	$device_p2="sda2"
-	$device_p3="sda3"
+	device="sda"
+	device_p1="sda1"
+	device_p2="sda2"
+	device_p3="sda3"
 }
 
 # Clean disk and enable encryption
