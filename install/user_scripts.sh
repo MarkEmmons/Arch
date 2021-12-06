@@ -6,8 +6,8 @@ get_dotfiles(){
 	# Retrieve dotfiles
 	[[ -f .xinitrc ]] && rm -f .xinitrc
 	[[ -f .zshrc ]] && rm -f .zshrc
-    mkdir -p $HOME/workspace
-    git clone git@github.com:MarkEmmons/dotfiles.git $HOME/workspace/dotfiles
+	mkdir -p $HOME/workspace
+	git clone https://github.com/MarkEmmons/dotfiles.git
 
 	# Add dotfile scripts to path and make executable
 	export PATH=$PATH:$HOME/workspace/dotfiles/bin
