@@ -46,7 +46,7 @@ prepare(){
 	date > time.log
 }
 
-phys_begin(){
+begin(){
 
 	STAT_ARRAY=( "Zapping former partitions"
 	"Creating new partitions"
