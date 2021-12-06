@@ -155,8 +155,8 @@ build(){
 
 
 	# Install LaTex Tools
-	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf texlive-most
-
+	pacman --needed --noconfirm --noprogressbar -S zathura zathura-pdf-mupdf
+	lspci | grep -e VGA -e 3D | grep VMware > /dev/null || pacman --needed --noconfirm --noprogressbar -S texlive-most
 
 	# Install Console Tools
 	echo "Installing command line tools..."
