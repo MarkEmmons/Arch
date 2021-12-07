@@ -3,8 +3,9 @@
 # Get dotfiles
 get_dotfiles(){
 
-	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > /dev/null 3>&2 2>&1
-	sh install.sh
+	mv /install_ohmyzsh.sh ./install_ohmyzsh.sh
+	sh install_ohmyzsh.sh
+	rm install_ohmyzsh.sh
 
 	# Retrieve dotfiles
 	[[ -f .xinitrc ]] && rm -f .xinitrc

@@ -23,13 +23,7 @@ prepare(){
 	echo "Preparing to install ArchLinux"
 	echo
 
-	# Fetch some extra stuff
-	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
 	source defs.sh
-
-	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO "$SRC$CHROOT" > /dev/null 3>&2 2>&1
-	lspci | grep -e VGA -e 3D | grep VMware > /dev/null && curl -LJO "$SRC$PBAR" > /dev/null 3>&2 2>&1
-	#curl -LJO "$SRC$ARCHEY" > /dev/null 3>&2 2>&1
 	source progress_bar.sh
 
 	# Dissalow screen blanking for installation
@@ -210,8 +204,9 @@ install_base(){
 	## Copy over relevant files
 	mkdir -p /mnt/var/log/install
 	mv *.log /mnt/var/log/install
-	#mv archey /mnt/archey
 	cp progress_bar.sh /mnt/progress_bar.sh
+	cp user_scripts.sh /mnt/user_scripts.sh
+	cp install_ohmyzsh.sh /mnt/install_ohmyzsh.sh
 	cp /etc/zsh/zshrc /mnt/root/.zshrc
 
 	# Generate an fstab
