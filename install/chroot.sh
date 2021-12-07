@@ -255,7 +255,7 @@ configure_users > /var/log/install/chroot/configure_users.log 3>&2 2>&1
 build > /var/log/install/chroot/build.log 3>&2 2>&1
 
 # Enable dhcpcd on VirtualBox
-lspci | grep -e VGA -e 3D | grep VMware > /dev/null && enable_dhcpcd > /var/log/install/chroot/enable_dhcpcd.log 3>&2 2>&1
+enable_dhcpcd > /var/log/install/chroot/enable_dhcpcd.log 3>&2 2>&1
 
 get_runtime
 tput setaf 5 && tput bold && echo "Arch Linux has been installed!" && tput sgr0
