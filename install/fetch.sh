@@ -1,17 +1,17 @@
 # Last calculated hashes
-INSTALL='6fa257edf5690dd7c517db16ed8aeab3a3ba506e9513b9b127716191907cd625bb74bbc35e0e2b4e4f7c5ac471c22006254131a71a51d9d5b4bac932720a6f19'
-DEFS='5a2adf14ff3f344d8bf4bf8a5b41728316572ec070199e701d35e9db96f9a3429e54a9181af934acf81ca9250e1ce1d75ea310b1d7a9984e92f662c03060c7bb'
-CHROOT='b42faefa42f9e7164a7cda3905de346e7d0b743ca973993ad3ea880e57fd763716f30872073a369b09f511cc06ad93516b11f89a9c9a6aaa9ab270fad61b06a8'
-PROGRESS_BAR='244494eda475cc65d1cc2c704d633585e2d6d18de1c3a8c9f2b0d73b39608434d345e0ae26f41074588da31cbae09fe2e52054ca3925d604f95d15d349e72fa5'
-USER_SCRIPTS='ecba402466b49895763be61bad7dc8e149c1db2ccedbdd18190613179871f632235e978061bafd43f9e8b43f33eeaf3baf3009c24fa650b66c25bd71b7c43b75'
+INSTALL='1fcedea9844100d49b406c0ec6bf709fe4adf2f9cf13965e039184c8f3fb0b8f9248181ba09b7d9ba5587c7ec028e58b25ef2ee9a21a390904ba9eb57b2dc922'
+DEFS='0244fa2d23787c8a2ff45346323d7a41f561350c26f35740791ee73856a62401a2192aa0768812dc43411a8bdde38a8ec819ef6d19022c4e838e16943c9821e1'
+CHROOT='aa47c9f72b74dd80627dc9d1215436f42b643b20565c25d4a0c80d36afc26adbaebf421d95845e4a39262058d34eaa3a6b39fe117654feb497acad683d182e49'
+PROGRESS_BAR='34842a5ecc23cbde6eea924a62c7181e4348a972f9be845a5cfd1c2d479d1621c0cf48c96a0b87f0e3cc0d520a6b705e6ae091ce7647236a5d8085d64ad0d21b'
+USER_SCRIPTS='300a6b525271b9fb6b00339ada36beb3b3fcaafafa5a8e376f9771268d3b2e3c25fa8bcda6a3594426989ddc45d4e9deee2653b22aa107ffa6ea343c1320a71e'
 OHMYZSH='42cc12ab9187e97e39ea6078be103c6cfafdeaa823bfab102bb26ccd17aa4dbd365d43fc364b85a117110833a90654d9955948164bb75012182e770c9e310745'
 
 # Get your stuff
-curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/install.sh > /dev/null 3>&2 2>&1
-curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
-curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/chroot.sh > /dev/null 3>&2 2>&1
-curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/progress_bar.sh > /dev/null 3>&2 2>&1
-curl -LJO https://raw.githubusercontent.com/MarkEmmons/Arch/master/install/user_scripts.sh > /dev/null 3>&2 2>&1
+curl -LJO https://raw.github.com/MarkEmmons/Arch/master/install.sh > /dev/null 3>&2 2>&1
+curl -LJO https://raw.github.com/MarkEmmons/Arch/master/install/defs.sh > /dev/null 3>&2 2>&1
+curl -LJO https://raw.github.com/MarkEmmons/Arch/master/install/chroot.sh > /dev/null 3>&2 2>&1
+curl -LJO https://raw.github.com/MarkEmmons/Arch/master/install/progress_bar.sh > /dev/null 3>&2 2>&1
+curl -LJO https://raw.github.com/MarkEmmons/Arch/master/install/user_scripts.sh > /dev/null 3>&2 2>&1
 
 curl -LJo install_ohmyzsh.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > /dev/null 3>&2 2>&1
 
